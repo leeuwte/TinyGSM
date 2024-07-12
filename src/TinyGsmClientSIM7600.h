@@ -492,9 +492,12 @@ class TinyGsmSim7600 : public TinyGsmModem<TinyGsmSim7600>,
       int   imin         = 0;
       float secondWithSS = 0;
 
-      streamSkipUntil(',');               // GPS satellite valid numbers
+      ivsat = streamGetIntBefore(',');    // GPS satellite valid numbers
+
       streamSkipUntil(',');               // GLONASS satellite valid numbers
       streamSkipUntil(',');               // BEIDOU satellite valid numbers
+      streamSkipUntil(','); // one not known parameter
+
       ilat  = streamGetFloatBefore(',');  // Latitude in ddmm.mmmmmm
       north = stream.readStringUntil(',').charAt(
           0);                            // N/S Indicator, N=north or S=south
@@ -522,11 +525,9 @@ class TinyGsmSim7600 : public TinyGsmModem<TinyGsmSim7600>,
 
       // Set pointers
       if (lat != nullptr)
-        *lat = (floor(ilat / 100) + fmod(ilat, 100.) / 60) *
-            (north == 'N' ? 1 : -1);
+        *lat = ilat * (north == 'N' ? 1 : -1);
       if (lon != nullptr)
-        *lon = (floor(ilon / 100) + fmod(ilon, 100.) / 60) *
-            (east == 'E' ? 1 : -1);
+        *lon = ilon * (east == 'E' ? 1 : -1);
       if (speed != nullptr) *speed = ispeed;
       if (alt != nullptr) *alt = ialt;
       if (vsat != nullptr) *vsat = ivsat;
