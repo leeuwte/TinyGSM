@@ -443,13 +443,13 @@ class TinyGsmSim7600 : public TinyGsmModem<TinyGsmSim7600>,
  protected:
   // enable GPS
   bool enableGPSImpl() {
-    sendAT(GF("+CGPS=1"));
+    sendAT(GF("+CGNSSPWR=1"));
     if (waitResponse() != 1) { return false; }
     return true;
   }
 
   bool disableGPSImpl() {
-    sendAT(GF("+CGPS=0"));
+    sendAT(GF("+CGNSSPWR=0"));
     if (waitResponse() != 1) { return false; }
     return true;
   }
